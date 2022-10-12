@@ -8,7 +8,7 @@ table {
 
 button {
   background-color: #8a2be2;
-  border: 1px solid grey;
+  border: 1px solid white;
   color: white;
   padding: 5px;
   text-align: center;
@@ -51,10 +51,10 @@ button:disabled {
   width: 410px;
   height: 70px;
   font-size: 48px;
-  border: 1px solid grey;
   font-family: Helvetica, Arial, sans-serif;
   background-color: #8839ee;
   color: white;
+  border: 1px solid white;
 }
 
 #errorOut {
@@ -62,4 +62,13 @@ button:disabled {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   color: red;
+}
+
+div {
+  margin: auto;
+  padding: 8px;
+  width: 417px;
+  height: 610px;
+  border: 1px solid white;
+  background-color: rgb(208, 172, 241);
 }

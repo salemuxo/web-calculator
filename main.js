@@ -2,9 +2,11 @@
 let table = document.getElementById("calcTable");
 let outputText = document.getElementById("output");
 let errorText = document.getElementById("errorOut");
-let calcBooleans = {
+let calcValues = {
   toClear: false,
   isChanged: false,
+  closePar: -1,
+  ignoreNext: false,
 };
 // storage arrays
 const storedNums = [];
@@ -38,10 +40,15 @@ function mathFunc(func) {
   if (func === "+" || func === "-") storedFuncs.push(func);
   else if (func === "×") storedFuncs.push("*");
   else if (func === "÷") storedFuncs.push("/");
-  if (outputText.innerHTML.length != 0) {
+  else if (func === "xⁿ") storedFuncs.push("**");
+  else if (func === "√") {
+    storedFuncs.push("Math.sqrt(");
+    calcValues.closePar = storedFuncs.length;
+  }
+  if (outputText.innerHTML.length != 0 && func != "√") {
     storedNums.push(outputText.innerHTML);
-    calcBooleans.toClear = true;
-    calcBooleans.isChanged = false;
+    calcValues.toClear = true;
+    calcValues.isChanged = false;
   }
 }
 
@@ -54,11 +61,20 @@ function calculate() {
   }
   let calcString = "";
   // loop through storedNums + storedFuncs and add to calcString
-  for (i = 0; i < storedNums.length; i++) {
-    calcString += storedNums[i];
-    calcString += storedFuncs[i];
+  for (i = 0; i < storedFuncs.length; i++) {
+    if (storedNums.length != 0 && storedNums[i] != undefined)
+      calcString += storedNums[i];
+    if (calcValues.closePar === i) calcString += ")";
+    if (!calcValues.ignoreNext) calcString += storedFuncs[i];
+    calcValues.ignoreNext = false;
+    if (storedFuncs[i + 1] === "Math.sqrt(") {
+      calcString += storedFuncs[i + 1];
+      calcValues.ignoreNext = true;
+    }
   }
   calcString += outputText.innerHTML;
+  if (calcValues.closePar > storedNums.length) calcString += ")";
+  console.log(calcString);
 
   // convert calcString to equation + calculate
   let calcNum = eval(calcString);
@@ -69,14 +85,14 @@ function calculate() {
   // clear storage
   storedFuncs.length = 0;
   storedNums.length = 0;
-  calcBooleans.toClear = true;
+  calcValues.toClear = true;
 }
 
 // add number to outputText
 function addNum(btnVal) {
-  if (calcBooleans.toClear) outputText.innerHTML = "";
-  calcBooleans.toClear = false;
-  calcBooleans.isChanged = true;
+  if (calcValues.toClear) outputText.innerHTML = "";
+  calcValues.toClear = false;
+  calcValues.isChanged = true;
   // if trying to add decimal and already contains decimal, give error
   if (btnVal === "." && outputText.innerHTML.includes(btnVal))
     addError("Can't add more than 1 decimal.");
