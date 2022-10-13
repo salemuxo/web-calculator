@@ -38,6 +38,7 @@ function mathFunc(func) {
   if (func === "+" || func === "-") storedFuncs.push(func);
   else if (func === "×") storedFuncs.push("*");
   else if (func === "÷") storedFuncs.push("/");
+  else if (func === "xⁿ") storedFuncs.push("**");
   if (outputText.innerHTML.length != 0) {
     storedNums.push(outputText.innerHTML);
     calcBooleans.toClear = true;
